@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+    <!--<master auto="start"/>--> <!-- Start roscore --> 
+    <arg name="camera" default="camera" /> <!-- define argument camera -->
+    
+    <!-- Connect to robot platform -->
+    <node pkg="rosaria" type="RosAria" name="RosAria">
+      <param name="port" value="/dev/ttyUSB0" type="string"/> 
+    </node>
+    
+    
+    <!-- Run rosserial_arduino receive data from encoder -->
+    <node pkg="rosserial_arduino" type="serial_node.py" name="serial_node">
+         <param name="port" value="/dev/ttyACM0"/>
+         <param name="baud" value="9600"/>
+    </node>
+    
+    <node pkg="my_ubuntu" type="backward_movement" name="backward_movement" output="screen"/>
+
+</launch>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<launch>
+
+   <!-- <master auto="start"/> -->
+   <!-- Run the map server -->
+   <!--<node pkg="map_server" type="map_server" name="map_server" args="$(find p3at_robot_2dnav)/maps/map_201BC1_full_2.pgm 0.05" /> --> <!-- Phai xac dinh dung resolution de phat sinh loi "The origin for the sensor at (..., ..) is out of map bounds. So, the costmap cannot raytrace for it." Nen dung file yaml -->
+   
+   <node pkg="map_server" type="map_server" name="map_server" args="$(find p3at_robot_2dnav)/maps/Xuong_C1_Map.yaml" /> 
+   
+   
+   <!-- Run AMCL -->
+   <include file="$(find amcl)/examples/amcl_diff_2.launch"/>
+   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+   
+     <param name="base_global_planner" value="globalplanner/GlobalPlanner"/>
+     <param name="clearing_rotation_allowed" value="false"/>
+     
+     <rosparam file="$(find truck_trailer_robot)/param/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+     <rosparam file="$(find truck_trailer_robot)/param/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+     <rosparam file="$(find truck_trailer_robot)/param/local_costmap_params.yaml" command="load" />
+     <rosparam file="$(find truck_trailer_robot)/param/global_costmap_params.yaml" command="load" />
+     
+     <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
+     <rosparam file="$(find truck_trailer_robot)/param/dwa_planner_ros.yaml" command="load" />
+     
+     <remap from="/cmd_vel" to="/RosAria/cmd_vel" />  
+   
+   </node>
+   
+   <node pkg="rviz" type="rviz" name="rviz"/>
+   
+</launch>
